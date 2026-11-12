@@ -1,0 +1,875 @@
+/* ============================================================
+   Biodiversity of Chatlam — app.js
+   Safe DOM rendering using textContent, createElement, replaceChildren.
+   Zero innerHTML. Mobile-first Popup Modal + Touch Swipe Navigation!
+   ============================================================ */
+
+var BIRDS = [
+  {
+    "no": 1,
+    "english": "Little Grebe",
+    "scientific": "Tachybaptus ruficollis",
+    "kashmiri": "Pind",
+    "kashmiriScript": "پِنٛڈ",
+    "category": "Grebes & Cormorants",
+    "localImage": "images/01.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Little_grebe_Zwergtaucher.jpg/960px-Little_grebe_Zwergtaucher.jpg",
+    "description": "A small, plump waterbird with chestnut-red cheeks and neck in breeding season, and a distinctive pale yellow gape spot. Famous in Kashmir for diving underwater instantaneously without making a splash.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Little_grebe",
+    "photographer": "Andreas Trepte"
+  },
+  {
+    "no": 2,
+    "english": "Great Cormorant",
+    "scientific": "Phalacrocorax carbo",
+    "kashmiri": "Mong",
+    "kashmiriScript": "موٚنٛگ",
+    "category": "Grebes & Cormorants",
+    "localImage": "images/02.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/2021-05-05_Phalacrocorax_carbo_carbo%2C_Killingworth_Lake%2C_Northumberland_1-1.jpg/960px-2021-05-05_Phalacrocorax_carbo_carbo%2C_Killingworth_Lake%2C_Northumberland_1-1.jpg",
+    "description": "A large, heavy black waterbird with a hooked bill and yellow throat pouch. Often seen standing on wooden posts or wetland banks with its wings spread wide to dry in the sun after diving for fish.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Great_cormorant",
+    "photographer": "MPF"
+  },
+  {
+    "no": 3,
+    "english": "Indian Pond Heron",
+    "scientific": "Ardeola grayii",
+    "kashmiri": "Broku",
+    "kashmiriScript": "برٛوکوٗ",
+    "category": "Herons & Bitterns",
+    "localImage": "images/03.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Indian_pond_heron_%28Ardeola_grayii%29_non_breeding.jpg/960px-Indian_pond_heron_%28Ardeola_grayii%29_non_breeding.jpg",
+    "description": "Master of camouflage. Looks drab, streaked earthy-brown when hunched quietly on the water edge, but flashes startling pure white wings the instant it takes off.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Indian_pond_heron",
+    "photographer": "Charles J. Sharp"
+  },
+  {
+    "no": 4,
+    "english": "Black-crowned Night Heron",
+    "scientific": "Nycticorax nycticorax",
+    "kashmiri": "Bor",
+    "kashmiriScript": "بور",
+    "category": "Herons & Bitterns",
+    "localImage": "images/04.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Nycticorax_nycticorax_457953189.jpg/960px-Nycticorax_nycticorax_457953189.jpg",
+    "description": "A stocky, thick-necked heron with a black crown and back, grey wings, white underparts, and glowing ruby-red eyes. Roosts quietly in willow trees by day and hunts fish during dusk and night.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Black-crowned_night_heron",
+    "photographer": "ramidos"
+  },
+  {
+    "no": 5,
+    "english": "Grey Heron",
+    "scientific": "Ardea cinerea",
+    "kashmiri": "Brag",
+    "kashmiriScript": "براگ",
+    "category": "Herons & Bitterns",
+    "localImage": "images/05.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a9/Il_pescatore_solitario.jpg/960px-Il_pescatore_solitario.jpg",
+    "description": "A tall, majestic grey wading bird with long skinny legs, a slender S-curved neck, and a sharp dagger-like yellow bill. Stands motionless in shallow water waiting for fish, giving rise to the famous Kashmiri proverb 'Brag hyoosh behoon'.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Grey_heron",
+    "photographer": "Giacomo Cimino"
+  },
+  {
+    "no": 6,
+    "english": "Little Bittern",
+    "scientific": "Ixobrychus minutus",
+    "kashmiri": "Goi",
+    "kashmiriScript": "گوی",
+    "category": "Herons & Bitterns",
+    "localImage": "images/06.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Zwergdommel.jpg/960px-Zwergdommel.jpg",
+    "description": "A small, shy heron of dense reedbeds. The male has a black crown and back with creamy-buff wing patches. Freezes vertically with its neck stretched upward to blend into the surrounding reeds.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Little_bittern",
+    "photographer": "Andreas Trepte"
+  },
+  {
+    "no": 7,
+    "english": "Greylag Goose",
+    "scientific": "Anser anser",
+    "kashmiri": "Anz",
+    "kashmiriScript": "آنٛز",
+    "category": "Ducks & Geese",
+    "localImage": "images/07.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Greylag_Goose_-_St_James%27s_Park%2C_London_-_Nov_2006.jpg/960px-Greylag_Goose_-_St_James%27s_Park%2C_London_-_Nov_2006.jpg",
+    "description": "A massive wild goose with grey-brown plumage, a heavy pink-orange bill, and pink legs. Flocks arrive in winter across the Himalayas from Central Asia and are celebrated widely in Kashmiri folk poetry and idioms.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Greylag_goose",
+    "photographer": "Diliff"
+  },
+  {
+    "no": 8,
+    "english": "Mallard",
+    "scientific": "Anas platyrhynchos",
+    "kashmiri": "Niluj / Thuj",
+    "kashmiriScript": "نِلِج / تھُج",
+    "category": "Ducks & Geese",
+    "localImage": "images/08.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Anas_platyrhynchos_male_female_quadrat.jpg/960px-Anas_platyrhynchos_male_female_quadrat.jpg",
+    "description": "The most common and familiar wild duck at Chatlam. The male (Niluj) has a brilliant emerald-green head, white neck ring, and yellow bill; the female (Thuj) is mottled brown with an orange and black bill.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Mallard",
+    "photographer": "Richard Bartz"
+  },
+  {
+    "no": 9,
+    "english": "Northern Pintail",
+    "scientific": "Anas acuta",
+    "kashmiri": "Sukh Pachan",
+    "kashmiriScript": "سُکھ پاچَن",
+    "category": "Ducks & Geese",
+    "localImage": "images/09.jpg",
+    "remoteImage": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Northern_Pintails_%28Male_%26_Female%29_I_IMG_0911.jpg",
+    "description": "An exceptionally slender, elegant duck with a long neck and needle-pointed tail. The male has a chocolate-brown head, white breast, and a white stripe running up each side of the neck.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Northern_pintail",
+    "photographer": "Wikimedia Commons"
+  },
+  {
+    "no": 10,
+    "english": "Common Teal",
+    "scientific": "Anas crecca",
+    "kashmiri": "Kues",
+    "kashmiriScript": "کئوٗس",
+    "category": "Ducks & Geese",
+    "localImage": "images/10.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Eurasian_teal_%28Anas_crecca_crecca%29_male_Qingshui.jpg/960px-Eurasian_teal_%28Anas_crecca_crecca%29_male_Qingshui.jpg",
+    "description": "The smallest dabbling duck in Kashmir. The male has a chestnut head with a broad dark-green eye patch, finely pencilled grey sides, and a bright green wing patch (speculum). Very fast in flight.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Eurasian_teal",
+    "photographer": "Charles J. Sharp"
+  },
+  {
+    "no": 11,
+    "english": "Northern Shoveler",
+    "scientific": "Spatula clypeata",
+    "kashmiri": "Honk",
+    "kashmiriScript": "ہونٛک",
+    "category": "Ducks & Geese",
+    "localImage": "images/11.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Northern_shoveler_%28Spatula_clypeata%29_male_Marken.jpg/960px-Northern_shoveler_%28Spatula_clypeata%29_male_Marken.jpg",
+    "description": "Easily identified by its oversized, spatulate spoon bill used for filter-feeding on the water surface. The male has an iridescent bottle-green head, white breast, and chestnut-red belly.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Northern_shoveler",
+    "photographer": "Charles J. Sharp"
+  },
+  {
+    "no": 12,
+    "english": "Eurasian Wigeon",
+    "scientific": "Mareca penelope",
+    "kashmiri": "Shierene Budun",
+    "kashmiriScript": "شیٖریٖن بُدُن",
+    "category": "Ducks & Geese",
+    "localImage": "images/12.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Eurasian_wigeon_in_Sakai%2C_Osaka%2C_February_2016.jpg/960px-Eurasian_wigeon_in_Sakai%2C_Osaka%2C_February_2016.jpg",
+    "description": "A compact duck where the male has a warm chestnut-red head with a creamy-yellow forehead stripe, a pinkish-grey breast, and pale grey flanks. Well known for its clear whistling flight call.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Eurasian_wigeon",
+    "photographer": "Laitche"
+  },
+  {
+    "no": 13,
+    "english": "Gadwall",
+    "scientific": "Mareca strepera",
+    "kashmiri": "Budun",
+    "kashmiriScript": "بُدُن",
+    "category": "Ducks & Geese",
+    "localImage": "images/13.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Gadwall-Anas-strepera.jpg/960px-Gadwall-Anas-strepera.jpg",
+    "description": "A medium-sized duck with intricate grey and brown vermiculated plumage, a contrasting jet-black rear end, and a prominent white wing speculum visible in flight.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Gadwall",
+    "photographer": "Andreas Trepte"
+  },
+  {
+    "no": 14,
+    "english": "Garganey",
+    "scientific": "Spatula querquedula",
+    "kashmiri": "Noer",
+    "kashmiriScript": "نویر",
+    "category": "Ducks & Geese",
+    "localImage": "images/14.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/92/Garganey%2C_Israel.jpg/960px-Garganey%2C_Israel.jpg",
+    "description": "A small migratory dabbling duck. The male has a distinctive broad white crescent curving from above the eye to the back of the neck, a brown breast, and pale blue-grey forewings.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Garganey",
+    "photographer": "YedidyaPopper"
+  },
+  {
+    "no": 15,
+    "english": "Tufted Duck",
+    "scientific": "Aythya fuligula",
+    "kashmiri": "Thauther",
+    "kashmiriScript": "تھوتھر",
+    "category": "Ducks & Geese",
+    "localImage": "images/15.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Tufted_Duck_09_05_2025_02.jpg/960px-Tufted_Duck_09_05_2025_02.jpg",
+    "description": "A medium-sized diving duck. The male is entirely black with contrasting clean white flanks, bright yellow eyes, and a drooping crest (tuft) at the back of its head.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Tufted_duck",
+    "photographer": "Alexis Lours"
+  },
+  {
+    "no": 16,
+    "english": "Common Pochard",
+    "scientific": "Aythya ferina",
+    "kashmiri": "Khrokh",
+    "kashmiriScript": "کھروٚکھ",
+    "category": "Ducks & Geese",
+    "localImage": "images/16.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Common_Pochard_2025_11_15_04.jpg/960px-Common_Pochard_2025_11_15_04.jpg",
+    "description": "An expert diving duck. The male has a rich rusty reddish-chestnut head, piercing red eyes, black breast, and pale silvery-grey body. Dives to the lake bed to feed on aquatic plants.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_pochard",
+    "photographer": "Alexis Lours"
+  },
+  {
+    "no": 17,
+    "english": "Red-crested Pochard",
+    "scientific": "Netta rufina",
+    "kashmiri": "Tsarow",
+    "kashmiriScript": "ژارَو",
+    "category": "Ducks & Geese",
+    "localImage": "images/17.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Netta_rufina_%28Red-crested_Pochard%29_Male%2C_London_Wetland_Centre_-_Diliff.jpg/960px-Netta_rufina_%28Red-crested_Pochard%29_Male%2C_London_Wetland_Centre_-_Diliff.jpg",
+    "description": "A stunning diving duck. The male has a rounded, fluffy golden-orange head, a bright coral-red bill, a black breast and belly, and pure white flanks.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Red-crested_pochard",
+    "photographer": "Diliff"
+  },
+  {
+    "no": 18,
+    "english": "Ferruginous Pochard",
+    "scientific": "Aythya nyroca",
+    "kashmiri": "Harwat",
+    "kashmiriScript": "ہَروَت",
+    "category": "Ducks & Geese",
+    "localImage": "images/18.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Aythya_nyroca_at_Martin_Mere.jpg/960px-Aythya_nyroca_at_Martin_Mere.jpg",
+    "description": "A small, rich chestnut-brown diving duck with pure white undertail feathers, striking white eyes in males, and a bright white wing bar visible when flying.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Ferruginous_duck",
+    "photographer": "Francis C. Franklin"
+  },
+  {
+    "no": 19,
+    "english": "Ruddy Shelduck",
+    "scientific": "Tadorna ferruginea",
+    "kashmiri": "Tsakaow",
+    "kashmiriScript": "ژَکاو",
+    "category": "Ducks & Geese",
+    "localImage": "images/19.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/95/2021-01-30_Ruddy_Shelduck_pair_at_Keoladeo%2C_Rajasthan%2C_India.jpg/960px-2021-01-30_Ruddy_Shelduck_pair_at_Keoladeo%2C_Rajasthan%2C_India.jpg",
+    "description": "A distinct, large orange-brown (cinnamon) duck with a pale buff head, black tail, and white wing patches with glossy green feathers. Almost always seen in devoted pairs.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Ruddy_shelduck",
+    "photographer": "Rohit Sharma & MPF"
+  },
+  {
+    "no": 20,
+    "english": "Common Merganser",
+    "scientific": "Mergus merganser",
+    "kashmiri": "Gagur",
+    "kashmiriScript": "گَگُر",
+    "category": "Ducks & Geese",
+    "localImage": "images/20.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Mergus_merganser_merganser_2078_%285561922560%29.jpg/960px-Mergus_merganser_merganser_2078_%285561922560%29.jpg",
+    "description": "A large, fish-eating duck with a slender, serrated red bill. The male has a bottle-green head, black back, and creamy-white body with a salmon-pink blush.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_merganser",
+    "photographer": "Bengt Nyman"
+  },
+  {
+    "no": 21,
+    "english": "Pallas's Fish Eagle",
+    "scientific": "Haliaeetus leucoryphus",
+    "kashmiri": "Goda grad / Loz",
+    "kashmiriScript": "گۄڈٕ گراد / لوز",
+    "category": "Birds of Prey",
+    "localImage": "images/21.jpg",
+    "remoteImage": "https://upload.wikimedia.org/wikipedia/commons/5/53/Pallas%27s_Fish_Eagle_%28_Haliaeetus_leucoryphus%29_2.jpg",
+    "description": "A large, powerful eagle with dark brown wings, a pale buff-white head and throat, and a wide black tail with a broad white central band. An apex predator that snatches fish and waterbirds from the wetland.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Pallas%27s_fish_eagle",
+    "photographer": "Wikimedia Commons"
+  },
+  {
+    "no": 22,
+    "english": "Black Kite",
+    "scientific": "Milvus migrans",
+    "kashmiri": "Gaunt",
+    "kashmiriScript": "گونٛٹ",
+    "category": "Birds of Prey",
+    "localImage": "images/22.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Schwarzmilan.jpg/960px-Schwarzmilan.jpg",
+    "description": "A familiar, medium-sized raptor with dark brown plumage and a distinctive shallowly forked tail. Frequently seen soaring effortlessly on thermal updrafts over water and nearby fields.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Black_kite",
+    "photographer": "Andreas Trepte"
+  },
+  {
+    "no": 23,
+    "english": "Himalayan Griffon",
+    "scientific": "Gyps himalayensis",
+    "kashmiri": "Gred",
+    "kashmiriScript": "گرؠد",
+    "category": "Birds of Prey",
+    "localImage": "images/23.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a1/Himalayan_Griffon_%28Gyps_himalayensis%29.jpg/960px-Himalayan_Griffon_%28Gyps_himalayensis%29.jpg",
+    "description": "A massive mountain vulture with broad wings, a pale creamy-buff body, dark wing feathers, and a feathered white neck ruff. Often seen cruising high over the surrounding mountain ridges.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Himalayan_vulture",
+    "photographer": "Sahana M"
+  },
+  {
+    "no": 24,
+    "english": "Common Crane",
+    "scientific": "Grus grus",
+    "kashmiri": "Hillaw",
+    "kashmiriScript": "ہِلَو",
+    "category": "Waders, Crakes & Rails",
+    "localImage": "images/24.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fd/Common_crane_grus_grus.jpg/960px-Common_crane_grus_grus.jpg",
+    "description": "A tall, stately slate-grey bird with long legs, a long neck, a black and white head with a red crown patch, and drooping tail plumes. Celebrated for its bugling calls on migration.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_crane",
+    "photographer": "Andreas Trepte"
+  },
+  {
+    "no": 25,
+    "english": "Baillon's Crake",
+    "scientific": "Zapornia pusilla",
+    "kashmiri": "Grettu / Grallu",
+    "kashmiriScript": "گرؠٹُو / گرَلُو",
+    "category": "Waders, Crakes & Rails",
+    "localImage": "images/25.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Porzana_pusilla_-_Mount_Annan_Botanical_Garden.jpg/960px-Porzana_pusilla_-_Mount_Annan_Botanical_Garden.jpg",
+    "description": "A tiny, secretive marsh bird with a brown back flecked with white, blue-grey face and breast, and bold black-and-white barred flanks. Creeps unobtrusively through dense marsh grass.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Baillon%27s_crake",
+    "photographer": "JJ Harrison"
+  },
+  {
+    "no": 26,
+    "english": "Ruddy-breasted Crake",
+    "scientific": "Zapornia fusca",
+    "kashmiri": "Gillu",
+    "kashmiriScript": "گِلُو",
+    "category": "Waders, Crakes & Rails",
+    "localImage": "images/26.jpg",
+    "remoteImage": "https://upload.wikimedia.org/wikipedia/commons/5/57/Ruddy-breasted_Crake_%28Porzana_fusca%29_in_Kolkata_I_IMG_2677.jpg",
+    "description": "A small rail with a dark olive-brown back, rich reddish-chestnut head and breast, and white barring on its rear flanks and undertail coverts.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Ruddy-breasted_crake",
+    "photographer": "Wikimedia Commons"
+  },
+  {
+    "no": 27,
+    "english": "Common Moorhen",
+    "scientific": "Gallinula chloropus",
+    "kashmiri": "Tech",
+    "kashmiriScript": "ٹیٖچ",
+    "category": "Waders, Crakes & Rails",
+    "localImage": "images/27.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Common_moorhen_%28Gallinula_chloropus%29_France.jpg/960px-Common_moorhen_%28Gallinula_chloropus%29_France.jpg",
+    "description": "A dark charcoal marsh bird with white flank streaks, white under the tail, and a bright red frontal shield with a yellow bill tip. Bobs its head continuously while swimming near reed margins.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_moorhen",
+    "photographer": "Alexis Lours"
+  },
+  {
+    "no": 28,
+    "english": "Common Coot",
+    "scientific": "Fulica atra",
+    "kashmiri": "Kollur / Kavput",
+    "kashmiriScript": "کولُر / کاوپُت",
+    "category": "Waders, Crakes & Rails",
+    "localImage": "images/28.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Eurasian_Coot_2023_11_25_03.jpg/960px-Eurasian_Coot_2023_11_25_03.jpg",
+    "description": "A sooty-black waterbird with a prominent white beak and white forehead shield. Feeds on submerged lake weeds and gathers in large groups on open water.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Eurasian_coot",
+    "photographer": "Alexis Lours"
+  },
+  {
+    "no": 29,
+    "english": "Pheasant-tailed Jacana",
+    "scientific": "Hydrophasianus chirurgus",
+    "kashmiri": "Gund Kaw",
+    "kashmiriScript": "گونٛد کاو",
+    "category": "Waders, Crakes & Rails",
+    "localImage": "images/29.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Pheasant-tailed_jacanas_%28Hydrophasianus_chirurgus%29_pair_cr.jpg/960px-Pheasant-tailed_jacanas_%28Hydrophasianus_chirurgus%29_pair_cr.jpg",
+    "description": "A summer visitor with an elongated pheasant-like tail, silky golden-yellow nape, and pure white wings. Its extraordinarily elongated toes enable it to walk gracefully over floating lotus leaves.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Pheasant-tailed_jacana",
+    "photographer": "Charles J. Sharp"
+  },
+  {
+    "no": 30,
+    "english": "Greater Painted-Snipe",
+    "scientific": "Rostratula benghalensis",
+    "kashmiri": "Gug / Gugu",
+    "kashmiriScript": "گوٗگ / گوٗگوٗ",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/30.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Greater_Painted-snipe_%28Rostratula_benghalensis%29_male%2C_Kruger_NP_%2853247730001%29.jpg/960px-Greater_Painted-snipe_%28Rostratula_benghalensis%29_male%2C_Kruger_NP_%2853247730001%29.jpg",
+    "description": "A striking, plump wader with large eyes and a curved bill tip. The female is more brightly colored than the male, with rich chestnut throat, white 'spectacles' around the eye, and dark bronze-green wings.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Greater_painted-snipe",
+    "photographer": "Bernard DUPONT"
+  },
+  {
+    "no": 31,
+    "english": "Little Ringed Plover",
+    "scientific": "Charadrius dubius",
+    "kashmiri": "Kola Katij",
+    "kashmiriScript": "کولہٕ کٔتِج",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/31.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d3/Charadrius_dubius_-_Little_ringed_plover_05.jpg/960px-Charadrius_dubius_-_Little_ringed_plover_05.jpg",
+    "description": "A small, active shoreline plover with brown upperparts, clean white underparts, a complete black neck ring, and a bright yellow ring around each eye. Runs in quick spurts along muddy shores.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Little_ringed_plover",
+    "photographer": "Zeynel Cebeci"
+  },
+  {
+    "no": 32,
+    "english": "Red-wattled Lapwing",
+    "scientific": "Vanellus indicus",
+    "kashmiri": "Hatatut",
+    "kashmiriScript": "ہَتاتُت",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/32.jpg",
+    "remoteImage": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Red-wattled_lapwing_%28Vanellus_indicus%29_Photograph_by_Shantanu_Kuveskar.jpg",
+    "description": "A conspicuous brown and white ground bird with a glossy black breast, white ear patches, long yellow legs, and fleshy red wattles in front of each eye. Known for its loud 'did-he-do-it' alarm call.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Red-wattled_lapwing",
+    "photographer": "Shantanu Kuveskar"
+  },
+  {
+    "no": 33,
+    "english": "Northern Lapwing",
+    "scientific": "Vanellus vanellus",
+    "kashmiri": "Greese Maharaz",
+    "kashmiriScript": "گریٖس مہاراز",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/33.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2f/Northern-Lapwing-Vanellus-vanellus.jpg/960px-Northern-Lapwing-Vanellus-vanellus.jpg",
+    "description": "A spectacular wader with an unmistakable long, upcurved crest, iridescent green-purple upperparts, black chest, and white belly. Named 'Greese Maharaz' (Peasant King) in Kashmiri for its regal appearance.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Northern_lapwing",
+    "photographer": "Andreas Trepte"
+  },
+  {
+    "no": 34,
+    "english": "Common Snipe",
+    "scientific": "Gallinago gallinago",
+    "kashmiri": "Chah",
+    "kashmiriScript": "چاہ",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/34.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c6/Common_snipe_%28Gallinago_gallinago%29_2022.jpg/960px-Common_snipe_%28Gallinago_gallinago%29_2022.jpg",
+    "description": "A cryptically patterned wading bird with an extraordinarily long, straight bill. Feeds by probing deeply into wet mud for earthworms and flies up in an explosive zigzag trajectory when flushed.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_snipe",
+    "photographer": "TRinaud"
+  },
+  {
+    "no": 35,
+    "english": "Common Sandpiper",
+    "scientific": "Actitis hypoleucos",
+    "kashmiri": "Kola Kavin",
+    "kashmiriScript": "کولہٕ کاوِن",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/35.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Actitis_hypoleucos_-_Laem_Pak_Bia.jpg/960px-Actitis_hypoleucos_-_Laem_Pak_Bia.jpg",
+    "description": "A small, energetic wader with grey-brown upperparts, white underparts, and a distinctive white spur extending onto the shoulder. Constantly bobs its tail and flies with stiff, bowed wings low over water.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_sandpiper",
+    "photographer": "JJ Harrison"
+  },
+  {
+    "no": 36,
+    "english": "Eurasian Woodcock",
+    "scientific": "Scolopax rusticola",
+    "kashmiri": "Zar Batchi",
+    "kashmiriScript": "زَر بَچی",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/36.jpg",
+    "remoteImage": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Woodcock_earthworm.jpg",
+    "description": "A stocky woodland and wet-scrub wading bird with beautifully mottled leaf-brown plumage, large dark eyes set high on its head for 360-degree vision, and a long straight bill.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Eurasian_woodcock",
+    "photographer": "Wikimedia Commons"
+  },
+  {
+    "no": 37,
+    "english": "Black-winged Stilt",
+    "scientific": "Himantopus himantopus",
+    "kashmiri": "Longzeyat",
+    "kashmiriScript": "لونٛگزیات",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/37.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Black-winged_stilt_%28Himantopus_himantopus%29_Pearaing.jpg/960px-Black-winged_stilt_%28Himantopus_himantopus%29_Pearaing.jpg",
+    "description": "A graceful black-and-white wading bird with extraordinarily long, pink legs, a thin straight black bill, and contrasting glossy black wings. Wades delicately through shallows.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Black-winged_stilt",
+    "photographer": "Charles J. Sharp"
+  },
+  {
+    "no": 38,
+    "english": "Whiskered Tern",
+    "scientific": "Chlidonias hybrida",
+    "kashmiri": "Krew / Kresh",
+    "kashmiriScript": "کرؠو / کرؠش",
+    "category": "Shorebirds & Snipes",
+    "localImage": "images/38.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Whiskered_tern_%28Chlidonias_hybrida_delalandii%29.jpg/960px-Whiskered_tern_%28Chlidonias_hybrida_delalandii%29.jpg",
+    "description": "A marsh tern that swoops low over the water surface to pick insects and tiny fish. In summer plumage, it has a black cap, contrasting white cheeks, dark grey belly, and red bill.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Whiskered_tern",
+    "photographer": "Charles J. Sharp"
+  },
+  {
+    "no": 39,
+    "english": "Blue Rock Pigeon",
+    "scientific": "Columba livia",
+    "kashmiri": "Jungli Kotur",
+    "kashmiriScript": "جَنٛگلی کوتُر",
+    "category": "Pigeons, Doves & Parakeets",
+    "localImage": "images/39.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/10/Columba_livia_%28Rock_Dove%2C_wild%29%2C_Duncansby_Head%2C_Caithness%2C_Scotland_1.jpg/960px-Columba_livia_%28Rock_Dove%2C_wild%29%2C_Duncansby_Head%2C_Caithness%2C_Scotland_1.jpg",
+    "description": "A bluish-grey pigeon with iridescent feathers on its neck and two prominent black bars across each wing. Common around rocky hills and wetland perimeters.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Rock_dove",
+    "photographer": "william_stephens"
+  },
+  {
+    "no": 40,
+    "english": "Eurasian Collared Dove",
+    "scientific": "Streptopelia decaocto",
+    "kashmiri": "Kukil",
+    "kashmiriScript": "کُکِل",
+    "category": "Pigeons, Doves & Parakeets",
+    "localImage": "images/40.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/2022-04-06_Streptopelia_decaocto%2C_Plovdiv%2C_Bulgaria_1.jpg/960px-2022-04-06_Streptopelia_decaocto%2C_Plovdiv%2C_Bulgaria_1.jpg",
+    "description": "A pale, sandy-grey dove with a narrow black half-collar edged in white around the back of its neck. Known for its gentle cooing call in gardens and willow groves.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Eurasian_collared_dove",
+    "photographer": "stevem4560"
+  },
+  {
+    "no": 41,
+    "english": "Oriental Turtle Dove",
+    "scientific": "Streptopelia orientalis",
+    "kashmiri": "Wan Kukil",
+    "kashmiriScript": "وَن کُکِل",
+    "category": "Pigeons, Doves & Parakeets",
+    "localImage": "images/41.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/2026-08-27_Streptopelia_orientalis_in_Chitose.jpg/960px-2026-08-27_Streptopelia_orientalis_in_Chitose.jpg",
+    "description": "A larger woodland dove with warm rufous-scalloped wing feathers and a distinct black-and-silver striped patch on each side of the neck.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Oriental_turtle_dove",
+    "photographer": "J. Patrick Fischer"
+  },
+  {
+    "no": 42,
+    "english": "Slaty-headed Parakeet",
+    "scientific": "Psittacula himalayana",
+    "kashmiri": "Shoga",
+    "kashmiriScript": "شوگہٕ",
+    "category": "Pigeons, Doves & Parakeets",
+    "localImage": "images/42.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/01/Slaty-headed_Parakeet_%2846098374481%29.jpg/960px-Slaty-headed_Parakeet_%2846098374481%29.jpg",
+    "description": "A Himalayan parakeet with vivid green body plumage, a dark slate-grey head, an orange-yellow bill, and a long blue tail with a yellow tip.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Slaty-headed_parakeet",
+    "photographer": "Koshy Koshy"
+  },
+  {
+    "no": 43,
+    "english": "Rose-ringed Parakeet",
+    "scientific": "Psittacula krameri",
+    "kashmiri": "Tota",
+    "kashmiriScript": "توتہٕ",
+    "category": "Pigeons, Doves & Parakeets",
+    "localImage": "images/43.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/African_Rose-ringed_Parakeet%2C_Tendaba%2C_Gambia_1.jpg/960px-African_Rose-ringed_Parakeet%2C_Tendaba%2C_Gambia_1.jpg",
+    "description": "A bright green parakeet with a heavy red hooked beak and long tail. Adult males exhibit a distinct pink and black neck ring.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Rose-ringed_parakeet",
+    "photographer": "danielskatz"
+  },
+  {
+    "no": 44,
+    "english": "Common Cuckoo",
+    "scientific": "Cuculus canorus",
+    "kashmiri": "Hor Kuk",
+    "kashmiriScript": "ہور کُک",
+    "category": "Pigeons, Doves & Parakeets",
+    "localImage": "images/44.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Cuckoo_%2851169010335%29.jpg/960px-Cuckoo_%2851169010335%29.jpg",
+    "description": "A dove-like grey bird with barred underparts, famous for its iconic two-note 'cuck-oo' call echoing across the valley in spring.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Common_cuckoo",
+    "photographer": "Andy Morffew"
+  },
+  {
+    "no": 45,
+    "english": "Small Blue Kingfisher",
+    "scientific": "Alcedo atthis",
+    "kashmiri": "Kola Tonch",
+    "kashmiriScript": "کولہٕ ٹونٛچ",
+    "category": "Kingfishers",
+    "localImage": "images/45.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Alcedo_atthis_-England-8_%28cropped%29.jpg/960px-Alcedo_atthis_-England-8_%28cropped%29.jpg",
+    "description": "A tiny, dazzling jewel-like bird with sparkling cobalt-blue upperparts and bright rufous-orange underparts. Darts like an arrow over water, plunge-diving to catch small fish.",
+    "wikipedia": "https://en.wikipedia.org/wiki/Small_blue_kingfisher",
+    "photographer": "Tony Wood"
+  },
+  {
+    "no": 46,
+    "english": "White-breasted Kingfisher",
+    "scientific": "Halcyon smyrnensis",
+    "kashmiri": "Bud Kola Tonch",
+    "kashmiriScript": "بَڈ کولہٕ ٹونٛچ",
+    "category": "Kingfishers",
+    "localImage": "images/46.jpg",
+    "remoteImage": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/White-throated_kingfisher_%28Halcyon_smyrnensis%29_Galle.jpg/960px-White-throated_kingfisher_%28Halcyon_smyrnensis%29_Galle.jpg",
+    "description": "A large, magnificent kingfisher with electric-blue wings and back, dark chocolate head and belly, bright white throat and breast, and a large red dagger bill. Perches on willows overlooking water.",
+    "wikipedia": "https://en.wikipedia.org/wiki/White-throated_kingfisher",
+    "photographer": "Charles J. Sharp"
+  }
+];
+
+/* ---------- Application State ---------- */
+var currentList = BIRDS.slice();
+var currentIndex = 0;
+
+/* ---------- DOM Element Cache ---------- */
+var gridView             = document.getElementById("grid-view");
+var modalBackdrop        = document.getElementById("bird-modal");
+var modalContent         = document.getElementById("modal-content");
+var searchInput          = document.getElementById("search");
+var searchClearBtn       = document.getElementById("search-clear");
+var searchMeta           = document.getElementById("search-meta");
+var closeBtn             = document.getElementById("close-btn");
+var prevBtn              = document.getElementById("prev-btn");
+var nextBtn              = document.getElementById("next-btn");
+var modalCounter         = document.getElementById("modal-counter");
+
+var detailPhoto          = document.getElementById("detail-photo");
+var detailPhotoAuthor    = document.getElementById("detail-photo-author");
+var detailCategory       = document.getElementById("detail-category");
+var detailKashmiri       = document.getElementById("detail-kashmiri");
+var detailKashmiriScript = document.getElementById("detail-kashmiri-script");
+var detailEnglish        = document.getElementById("detail-english");
+var detailScientific     = document.getElementById("detail-scientific");
+var detailDescription    = document.getElementById("detail-description");
+var detailWikiLink       = document.getElementById("detail-wiki-link");
+
+/* ---------- Render Grid of Cards ---------- */
+function renderGrid(list) {
+  gridView.replaceChildren();
+
+  if (searchMeta) {
+    searchMeta.textContent = "Showing " + list.length + " of " + BIRDS.length + " birds";
+  }
+
+  if (list.length === 0) {
+    var emptyBox = document.createElement("div");
+    emptyBox.className = "no-results";
+    var emptyText = document.createElement("p");
+    emptyText.textContent = "No birds found matching your search. Try typing a Kashmiri, English, or scientific name.";
+    emptyBox.appendChild(emptyText);
+    gridView.appendChild(emptyBox);
+    return;
+  }
+
+  list.forEach(function(bird, idx) {
+    var card = document.createElement("article");
+    card.className = "bird-card";
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-label", bird.english + " — " + bird.kashmiri);
+
+    var photoWrap = document.createElement("div");
+    photoWrap.className = "card-photo-wrap";
+
+    var img = document.createElement("img");
+    img.className = "card-photo";
+    img.src = bird.localImage;
+    img.alt = bird.english + " (" + bird.kashmiri + ")";
+    img.loading = "lazy";
+    img.setAttribute("referrerpolicy", "no-referrer");
+
+    img.onerror = function() {
+      if (img.src !== bird.remoteImage) {
+        img.src = bird.remoteImage;
+      }
+    };
+    photoWrap.appendChild(img);
+
+    var badge = document.createElement("span");
+    badge.className = "card-badge";
+    badge.textContent = "#" + bird.no;
+    photoWrap.appendChild(badge);
+
+    card.appendChild(photoWrap);
+
+    var body = document.createElement("div");
+    body.className = "card-body";
+
+    var kasRow = document.createElement("div");
+    kasRow.className = "card-kashmiri-row";
+
+    var kas = document.createElement("h2");
+    kas.className = "card-kashmiri";
+    kas.textContent = bird.kashmiri;
+    kasRow.appendChild(kas);
+
+    if (bird.kashmiriScript) {
+      var kasScript = document.createElement("span");
+      kasScript.className = "card-kashmiri-script";
+      kasScript.setAttribute("lang", "ks");
+      kasScript.setAttribute("dir", "rtl");
+      kasScript.textContent = bird.kashmiriScript;
+      kasRow.appendChild(kasScript);
+    }
+
+    body.appendChild(kasRow);
+
+    var eng = document.createElement("h3");
+    eng.className = "card-english";
+    eng.textContent = bird.english;
+    body.appendChild(eng);
+
+    var sci = document.createElement("p");
+    sci.className = "card-scientific";
+    sci.textContent = bird.scientific;
+    body.appendChild(sci);
+
+    if (bird.category) {
+      var cat = document.createElement("p");
+      cat.className = "card-category-tag";
+      cat.textContent = bird.category;
+      body.appendChild(cat);
+    }
+
+    var hint = document.createElement("span");
+    hint.className = "card-tap-hint";
+    hint.textContent = "Tap to view details →";
+    body.appendChild(hint);
+
+    card.appendChild(body);
+
+    card.addEventListener("click", function() {
+      openModal(list, idx);
+    });
+    card.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openModal(list, idx);
+      }
+    });
+
+    gridView.appendChild(card);
+  });
+}
+
+/* ---------- Modal Functions ---------- */
+function openModal(list, idx) {
+  currentList = list;
+  currentIndex = idx;
+  showBirdInfo(currentList[currentIndex]);
+  modalBackdrop.hidden = false;
+  document.body.style.overflow = "hidden";
+  if (modalContent) modalContent.scrollTop = 0;
+  closeBtn.focus();
+}
+
+function showBirdInfo(bird) {
+  detailPhoto.src = bird.localImage;
+  detailPhoto.alt = bird.english + " (" + bird.kashmiri + ")";
+  detailPhoto.setAttribute("referrerpolicy", "no-referrer");
+  detailPhoto.onerror = function() {
+    if (detailPhoto.src !== bird.remoteImage) {
+      detailPhoto.src = bird.remoteImage;
+    }
+  };
+
+  detailPhotoAuthor.textContent = bird.photographer ? ("Photo by " + bird.photographer) : "Wikimedia Commons";
+  detailCategory.textContent = bird.category || "Wetland Species";
+  detailKashmiri.textContent = bird.kashmiri;
+  detailKashmiriScript.textContent = bird.kashmiriScript || "";
+  detailEnglish.textContent = bird.english;
+  detailScientific.textContent = bird.scientific;
+  detailDescription.textContent = bird.description || ("Field notes for " + bird.english + " at Chatlam Wetland.");
+
+  if (bird.wikipedia) {
+    detailWikiLink.href = bird.wikipedia;
+    detailWikiLink.hidden = false;
+  } else {
+    detailWikiLink.hidden = true;
+  }
+
+  prevBtn.disabled = (currentIndex === 0);
+  nextBtn.disabled = (currentIndex === currentList.length - 1);
+  modalCounter.textContent = "Bird " + (currentIndex + 1) + " of " + currentList.length;
+}
+
+function closeModal() {
+  modalBackdrop.hidden = true;
+  document.body.style.overflow = "";
+}
+
+function goToPrev() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showBirdInfo(currentList[currentIndex]);
+    if (modalContent) modalContent.scrollTop = 0;
+  }
+}
+
+function goToNext() {
+  if (currentIndex < currentList.length - 1) {
+    currentIndex++;
+    showBirdInfo(currentList[currentIndex]);
+    if (modalContent) modalContent.scrollTop = 0;
+  }
+}
+
+/* ---------- Touch Swipe Support for Mobile Modal ---------- */
+var touchStartX = 0;
+var touchStartY = 0;
+
+if (modalContent) {
+  modalContent.addEventListener("touchstart", function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  modalContent.addEventListener("touchend", function(e) {
+    var diffX = e.changedTouches[0].screenX - touchStartX;
+    var diffY = e.changedTouches[0].screenY - touchStartY;
+    // Trigger only on intentional horizontal swipe
+    if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY) * 1.5) {
+      if (diffX < 0) {
+        goToNext();
+      } else {
+        goToPrev();
+      }
+    }
+  }, { passive: true });
+}
+
+/* ---------- Event Listeners ---------- */
+closeBtn.addEventListener("click", closeModal);
+prevBtn.addEventListener("click", goToPrev);
+nextBtn.addEventListener("click", goToNext);
+
+modalBackdrop.addEventListener("click", function(e) {
+  if (e.target === modalBackdrop) {
+    closeModal();
+  }
+});
+
+document.addEventListener("keydown", function(e) {
+  if (!modalBackdrop.hidden) {
+    if (e.key === "Escape") {
+      closeModal();
+    } else if (e.key === "ArrowLeft") {
+      goToPrev();
+    } else if (e.key === "ArrowRight") {
+      goToNext();
+    }
+  }
+});
+
+searchInput.addEventListener("input", function() {
+  var q = searchInput.value.trim().toLowerCase();
+  searchClearBtn.style.display = q.length > 0 ? "inline-flex" : "none";
+
+  var filtered = BIRDS.filter(function(b) {
+    return b.english.toLowerCase().includes(q)
+      || b.scientific.toLowerCase().includes(q)
+      || b.kashmiri.toLowerCase().includes(q)
+      || (b.kashmiriScript && b.kashmiriScript.includes(q))
+      || (b.category && b.category.toLowerCase().includes(q));
+  });
+
+  renderGrid(filtered);
+});
+
+searchClearBtn.addEventListener("click", function() {
+  searchInput.value = "";
+  searchClearBtn.style.display = "none";
+  searchInput.focus();
+  renderGrid(BIRDS);
+});
+
+/* ---------- Init ---------- */
+renderGrid(BIRDS);
