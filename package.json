@@ -1,0 +1,22 @@
+{
+  "name": "chatlam-birds",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Chatlam Wetland Reserve (Pampore, Kashmir) - Avian Heritage & Kashmiri Bird Guide",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8080 --bind 127.0.0.1",
+    "test": "node --check js/birdData.js && node --check js/app.js && node -e \"import('./js/birdData.js').then(m => console.log('Successfully validated ' + m.BIRD_DATABASE.length + ' authentic birds!'))\""
+  },
+  "keywords": [
+    "chatlam",
+    "wetland",
+    "kashmir",
+    "birds",
+    "pampore",
+    "kashmiri-names",
+    "ornithology"
+  ],
+  "author": "Chatlam Avian Conservation Initiative",
+  "license": "MIT"
+}
